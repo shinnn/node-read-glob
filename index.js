@@ -4,6 +4,7 @@
 */
 'use strict';
 
+var assertFsReadFileOption = require('assert-fs-readfile-option');
 var glob = require('glob');
 var readMultipleFiles = require('read-multiple-files');
 
@@ -12,7 +13,11 @@ module.exports = function readGlob(globPattern, options, cb) {
     cb = options;
     options = {};
   } else {
-    options = options || {};
+    if (options) {
+      assertFsReadFileOption(options);
+    } else {
+      options = {};
+    }
   }
 
   if (typeof cb !== 'function') {

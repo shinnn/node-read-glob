@@ -5,7 +5,7 @@ var readGlob = require('./');
 var test = require('tape');
 
 test('readGlob()', function(t) {
-  t.plan(10);
+  t.plan(13);
 
   readGlob('.git{attributes,ignore}', 'utf8', function(err, contents) {
     t.strictEqual(err, null, 'should read files.');
@@ -41,12 +41,27 @@ test('readGlob()', function(t) {
   });
 
   t.throws(
-    readGlob.bind(null, '', null, true), /TypeError.*Last argument/,
+    readGlob.bind(null, [''], noop), /TypeError.*string required/,
+    'should throw a type error when the first argument is not a string.'
+  );
+
+  t.throws(
+    readGlob.bind(null, '*', 1, noop), /TypeError.*argument/,
+    'should throw a type error when it takes invalid option value.'
+  );
+
+  t.throws(
+    readGlob.bind(null, '', 'utf7', noop), /Error.*encoding/,
+    'should throw a type error when the encoding is unknown.'
+  );
+
+  t.throws(
+    readGlob.bind(null, [''], true), /TypeError.*Last argument/,
     'should throw a type error when the last argument is not a function.'
   );
 
   t.throws(
-    readGlob.bind(null, [''], noop), /TypeError.*string required/,
-    'should throw a type error when the first argument is not a string.'
+    readGlob.bind(null), /TypeError.*Last argument/,
+    'should throw a type error when it takes no arguments.'
   );
 });

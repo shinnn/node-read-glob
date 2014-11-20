@@ -36,6 +36,7 @@
     "asynchronously"
   ],
   "dependencies": {
+    "assert-fs-readfile-option": "^1.0.0",
     "glob": "^4.1.5",
     "read-multiple-files": "^1.0.0"
   },
