@@ -90,6 +90,10 @@ readGlob('{foo,bar.baz}.txt', {nobrace: true}, function(err, contents) {
 });
 ```
 
+## Related project
+
+* [read-glob-promise](https://github.com/shinnn/read-glob-promise) ([Promises/A+](https://promisesaplus.com/) version)
+
 ## License
 
 Copyright (c) 2014 [Shinnosuke Watanabe](https://github.com/shinnn)
