@@ -38,7 +38,7 @@ test('readGlob()', function(t) {
   });
 
   readGlob('/**/*', function(err) {
-    t.equal(err.code, 'EACCES', 'should fail when globbing fails.');
+    t.ok(err.code, 'should fail when globbing fails.');
   });
 
   t.throws(
