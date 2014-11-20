@@ -18,7 +18,8 @@ test('readGlob()', function(t) {
   readGlob('{.gitattribute{s,s},**/index.js,node_modules,../}', {
     nounique: true,
     noglobstar: true,
-    encoding: 'hex'
+    encoding: 'hex',
+    ignoreDir: true
   }, function(err, contents) {
     t.strictEqual(err, null, 'should ignore directories.');
     t.deepEqual(contents, [
@@ -27,7 +28,7 @@ test('readGlob()', function(t) {
     ], 'should reflect minimatch, node-glob and fs.readFile to the result.');
   });
 
-  readGlob('__foo__bar__baz__qux__', {ignoreDir: true}, function(err, bufs) {
+  readGlob('__foo__bar__baz__qux__', null, function(err, bufs) {
     t.strictEqual(err, null, 'should not fail even if it doesn\'t read any files.');
     t.deepEqual(bufs, [], 'should pass an empty array to the callback when it reads no files.');
   });
