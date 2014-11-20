@@ -18,8 +18,7 @@ test('readGlob()', function(t) {
   readGlob('{.gitattribute{s,s},**/index.js,node_modules,../}', {
     nounique: true,
     noglobstar: true,
-    encoding: 'hex',
-    mark: true
+    encoding: 'hex'
   }, function(err, contents) {
     t.strictEqual(err, null, 'should ignore directories.');
     t.deepEqual(contents, [
