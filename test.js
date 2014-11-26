@@ -38,7 +38,10 @@ test('readGlob()', function(t) {
   });
 
   readGlob('/**/*', function(err) {
-    t.ok(err.code, 'should fail when globbing fails.');
+    t.ok(
+      err.code,
+      'should fail when it tries to access unaccessible paths, such as ' + err.path
+    );
   });
 
   t.throws(
