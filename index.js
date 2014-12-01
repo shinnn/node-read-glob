@@ -44,4 +44,6 @@ module.exports = function readGlob(globPattern, options, cb) {
 
     readMultipleFiles(filePaths, options, cb);
   });
+
+  return g;
 };

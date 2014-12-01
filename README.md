@@ -40,7 +40,8 @@ var readGlob = require('read-glob');
 
 *pattern*: `String` (glob pattern)  
 *options*: `Object` (for [glob] and [fs.readFile]) or `String` (for [fs.readFile])  
-*callback*: `Function`
+*callback*: `Function`  
+Return: `Object` (instance of [`glob.Glob`](https://github.com/isaacs/node-glob#class-globglob) class)
 
 It is similar to [fs.readFile]. The only deference is that it takes a glob pattern as its first argument.
 

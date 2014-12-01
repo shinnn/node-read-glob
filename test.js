@@ -1,5 +1,6 @@
 'use strict';
 
+var glob = require('glob');
 var noop = require('nop');
 var readGlob = require('./');
 var test = require('tape');
@@ -48,12 +49,15 @@ test('readGlob()', function(t) {
     t.equal(err.code, 'EISDIR', 'should fail when it cannot read the target.');
   });
 
-  readGlob('/**/*', function(err) {
+  var g = readGlob('/**/*', function(err) {
+    t.ok(g.aborted, 'should abort glob before it calls callback function.');
     t.ok(
       err.code,
       'should fail when it tries to access unaccessible paths, such as ' + err.path
     );
   });
+
+  t.strictEqual(g.constructor, glob.Glob, 'should return glob instance.');
 
   t.throws(
     readGlob.bind(null, [''], noop), /TypeError.*string required/,
