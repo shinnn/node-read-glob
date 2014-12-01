@@ -46,18 +46,9 @@ It is similar to [fs.readFile]. The only deference is that it takes a glob patte
 
 #### options
 
-The option object will be directly passed to [glob] and [fs.readFile], or the encoding string sets the encoding of [fs.readFile].
+The option object will be directly passed to [glob]() and [fs.readFile], or the encoding string sets the encoding of [fs.readFile].
 
-Additionally, [`ignoreDir` option](#optionsignoredir) is available.
-
-##### options.ignoreDir
-
-Type: `Boolean`  
-Default: `true`
-
-Excludes the directories from matched paths. It prevents `EISDIR` error when reading files.
-
-`false` disables this safty and improves globbing performance a bit.
+Unlike the original API, glob's `nodir` option is `true` by default.
 
 #### callback(*error*, *contents*)
 
@@ -101,4 +92,4 @@ Copyright (c) 2014 [Shinnosuke Watanabe](https://github.com/shinnn)
 Licensed under [the MIT License](./LICENSE).
 
 [fs.readFile]: http://nodejs.org/api/fs.html#fs_fs_readfile_filename_options_callback
-[glob]: https://github.com/isaacs/node-glob
+[glob]: https://github.com/isaacs/node-glob#options

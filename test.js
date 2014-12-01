@@ -3,29 +3,40 @@
 var noop = require('nop');
 var readGlob = require('./');
 var test = require('tape');
+var xtend = require('xtend');
 
 test('readGlob()', function(t) {
-  t.plan(13);
+  t.plan(16);
 
-  readGlob('.git{attributes,ignore}', 'utf8', function(err, contents) {
-    t.strictEqual(err, null, 'should read files.');
+  readGlob('{.git{attributes,ignore},node_*/{glob,xtend}}', 'utf8', function(err, contents) {
+    t.strictEqual(
+      err, null,
+      'should ignore directories even if the second argument is a string.'
+    );
     t.deepEqual(contents, [
       '* text=auto\n',
       'coverage\nnode_modules\n'
     ], 'should reflect encoding to the result.');
   });
 
-  readGlob('{.gitattribute{s,s},**/index.js,node_modules,../}', {
+  var options = {
     nounique: true,
     noglobstar: true,
-    encoding: 'hex',
-    ignoreDir: true
-  }, function(err, contents) {
-    t.strictEqual(err, null, 'should ignore directories.');
+    encoding: 'hex'
+  };
+
+  var optionsClone = xtend(options);
+
+  readGlob('{.gitattribute{s,s},**/test.js,node_*,../}', options, function(err, contents) {
+    t.strictEqual(err, null, 'should ignore directories by default.');
     t.deepEqual(contents, [
       new Buffer('* text=auto\n').toString('hex'),
       new Buffer('* text=auto\n').toString('hex')
     ], 'should reflect minimatch, node-glob and fs.readFile to the result.');
+    t.deepEqual(
+      options, optionsClone,
+      'should not modify the original option object.'
+    );
   });
 
   readGlob('__foo__bar__baz__qux__', null, function(err, bufs) {
@@ -33,7 +44,7 @@ test('readGlob()', function(t) {
     t.deepEqual(bufs, [], 'should pass an empty array to the callback when it reads no files.');
   });
 
-  readGlob('node_modules', {ignoreDir: false}, function(err) {
+  readGlob('node_modules', {nodir: false}, function(err) {
     t.equal(err.code, 'EISDIR', 'should fail when it cannot read the target.');
   });
 

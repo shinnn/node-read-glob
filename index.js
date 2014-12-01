@@ -7,29 +7,32 @@
 var assertFsReadFileOption = require('assert-fs-readfile-option');
 var glob = require('glob');
 var readMultipleFiles = require('read-multiple-files');
+var xtend = require('xtend');
+
+var defaultOption = {nodir: true};
 
 module.exports = function readGlob(globPattern, options, cb) {
   if (cb === undefined) {
     cb = options;
-    options = {};
+    options = defaultOption;
   } else {
     if (options) {
       assertFsReadFileOption(options);
+      if (typeof options === 'string') {
+        options = {
+          encoding: options,
+          nodir: true
+        };
+      } else {
+        options = xtend(defaultOption, options);
+      }
     } else {
-      options = {};
+      options = defaultOption;
     }
   }
 
   if (typeof cb !== 'function') {
     throw new TypeError(cb + ' is not a function. Last argument must be a function.');
-  }
-
-  if (typeof options === 'object' && options.ignoreDir === undefined) {
-    options.ignoreDir = true;
-  }
-
-  if (options.ignoreDir) {
-    options.mark = true;
   }
 
   var g = new glob.Glob(globPattern, options, function(err, filePaths) {
@@ -39,8 +42,6 @@ module.exports = function readGlob(globPattern, options, cb) {
       return;
     }
 
-    readMultipleFiles(filePaths.filter(function(filePath) {
-      return filePath.charAt(filePath.length - 1) !== '/';
-    }), options, cb);
+    readMultipleFiles(filePaths, options, cb);
   });
 };
