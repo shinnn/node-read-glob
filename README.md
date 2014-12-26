@@ -1,10 +1,10 @@
 # read-glob
 
-[![Build Status](https://travis-ci.org/shinnn/node-read-glob.svg?branch=master)](https://travis-ci.org/shinnn/node-read-glob)
+[![Build Status](https://img.shields.io/travis/shinnn/node-read-glob.svg?style=flat)](https://travis-ci.org/shinnn/node-read-glob)
 [![Build status](https://ci.appveyor.com/api/projects/status/9cf2k7pkog7ax2fs?svg=true)](https://ci.appveyor.com/project/ShinnosukeWatanabe/node-read-glob)
-[![Coverage Status](https://img.shields.io/coveralls/shinnn/node-read-glob.svg)](https://coveralls.io/r/shinnn/node-read-glob)
-[![Dependency Status](https://david-dm.org/shinnn/node-read-glob.svg)](https://david-dm.org/shinnn/node-read-glob)
-[![devDependency Status](https://david-dm.org/shinnn/node-read-glob/dev-status.svg)](https://david-dm.org/shinnn/node-read-glob#info=devDependencies)
+[![Coverage Status](https://img.shields.io/coveralls/shinnn/node-read-glob.svg?style=flat)](https://coveralls.io/r/shinnn/node-read-glob)
+[![Dependency Status](https://david-dm.org/shinnn/node-read-glob.svg?style=flat)](https://david-dm.org/shinnn/node-read-glob)
+[![devDependency Status](https://david-dm.org/shinnn/node-read-glob/dev-status.svg?style=flat)](https://david-dm.org/shinnn/node-read-glob#info=devDependencies)
 
 Search files with glob pattern and read them asynchronously
 
@@ -22,9 +22,9 @@ readGlob('src/*.txt', function(err, bufs) {
 
 ## Installation
 
-[![NPM version](https://badge.fury.io/js/read-glob.svg)](https://www.npmjs.org/package/read-glob)
+[![NPM version](https://img.shields.io/npm/v/read-glob.svg?style=flat)](https://www.npmjs.com/package/read-glob)
 
-[Use npm](https://www.npmjs.org/doc/cli/npm-install.html).
+[Use npm](https://docs.npmjs.com/cli/install).
 
 ```sh
 npm install read-glob
@@ -47,7 +47,7 @@ It is similar to [fs.readFile]. The only deference is that it takes a glob patte
 
 #### options
 
-The option object will be directly passed to [glob]() and [fs.readFile], or the encoding string sets the encoding of [fs.readFile].
+The option object will be directly passed to [glob] and [fs.readFile], or the encoding string sets the encoding of [fs.readFile].
 
 Unlike the original API, glob's `nodir` option is `true` by default.
 
