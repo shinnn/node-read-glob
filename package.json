@@ -46,7 +46,6 @@
     "istanbul": "^0.3.2",
     "istanbul-coveralls": "^1.0.1",
     "jscs": "^1.8.1",
-    "nop": "^1.0.0",
     "tap-spec": "^2.1.0",
     "tape": "^3.0.3"
   },

@@ -1,23 +1,19 @@
 'use strict';
 
 var glob = require('glob');
-var noop = require('nop');
 var readGlob = require('./');
 var test = require('tape');
 var xtend = require('xtend');
 
 test('readGlob()', function(t) {
-  t.plan(16);
+  t.plan(13);
 
   readGlob('{.git{attributes,ignore},node_*/{glob,xtend}}', 'utf8', function(err, contents) {
-    t.strictEqual(
-      err, null,
-      'should ignore directories even if the second argument is a string.'
+    t.deepEqual(
+      [err, contents],
+      [null, ['* text=auto\n', 'coverage\nnode_modules\n']],
+      'should reflect encoding to the result.'
     );
-    t.deepEqual(contents, [
-      '* text=auto\n',
-      'coverage\nnode_modules\n'
-    ], 'should reflect encoding to the result.');
   });
 
   var options = {
@@ -29,20 +25,22 @@ test('readGlob()', function(t) {
   var optionsClone = xtend(options);
 
   readGlob('{.gitattribute{s,s},**/test.js,node_*,../}', options, function(err, contents) {
-    t.strictEqual(err, null, 'should ignore directories by default.');
-    t.deepEqual(contents, [
-      new Buffer('* text=auto\n').toString('hex'),
-      new Buffer('* text=auto\n').toString('hex')
-    ], 'should reflect minimatch, node-glob and fs.readFile to the result.');
+    var expected = new Buffer('* text=auto\n').toString('hex');
+
     t.deepEqual(
-      options, optionsClone,
-      'should not modify the original option object.'
+      [err, contents],
+      [null, [expected, expected]],
+      'should reflect minimatch, node-glob and fs.readFile to the result.'
     );
+    t.deepEqual(options, optionsClone, 'should not modify the original option object.');
   });
 
   readGlob('__foo__bar__baz__qux__', null, function(err, bufs) {
-    t.strictEqual(err, null, 'should not fail even if it doesn\'t read any files.');
-    t.deepEqual(bufs, [], 'should pass an empty array to the callback when it reads no files.');
+    t.deepEqual(
+      [err, bufs],
+      [null, []],
+      'should pass an empty array to the callback when it reads no files.'
+    );
   });
 
   readGlob('node_modules', {nodir: false}, function(err) {
@@ -60,27 +58,32 @@ test('readGlob()', function(t) {
   t.strictEqual(g.constructor, glob.Glob, 'should return glob instance.');
 
   t.throws(
-    readGlob.bind(null, [''], noop), /TypeError.*string required/,
+    readGlob.bind(null, [''], t.fail),
+    /TypeError.*string required/,
     'should throw a type error when the first argument is not a string.'
   );
 
   t.throws(
-    readGlob.bind(null, '*', 1, noop), /TypeError.*argument/,
+    readGlob.bind(null, '*', 1, t.fail),
+    /TypeError.*argument/,
     'should throw a type error when it takes invalid option value.'
   );
 
   t.throws(
-    readGlob.bind(null, '', 'utf7', noop), /Error.*encoding/,
+    readGlob.bind(null, '', 'utf7', t.fail),
+    /Error.*encoding/,
     'should throw a type error when the encoding is unknown.'
   );
 
   t.throws(
-    readGlob.bind(null, [''], true), /TypeError.*Last argument/,
+    readGlob.bind(null, [''], true),
+    /TypeError.*Last argument/,
     'should throw a type error when the last argument is not a function.'
   );
 
   t.throws(
-    readGlob.bind(null), /TypeError.*Last argument/,
+    readGlob.bind(null),
+    /TypeError.*Last argument/,
     'should throw a type error when it takes no arguments.'
   );
 });
