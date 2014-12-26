@@ -8,7 +8,7 @@
     "url": "https://github.com/shinnn"
   },
   "scripts": {
-    "pretest": "eslint *.js && jscs *.js",
+    "pretest": "jscs *.js && eslint *.js",
     "test": "node test.js | tap-spec",
     "coverage": "istanbul cover test.js",
     "coveralls": "${npm_package_scripts_coverage} && istanbul-coveralls"
@@ -37,20 +37,22 @@
   ],
   "dependencies": {
     "assert-fs-readfile-option": "^1.0.0",
-    "glob": "^4.3.0",
-    "read-multiple-files": "^1.0.0",
+    "glob": "^4.3.2",
+    "read-multiple-files": "^1.1.0",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^0.10.0",
-    "istanbul": "^0.3.2",
+    "eslint": "^0.10.2",
+    "istanbul": "^0.3.5",
     "istanbul-coveralls": "^1.0.1",
-    "jscs": "^1.8.1",
-    "tap-spec": "^2.1.0",
+    "jscs": "^1.9.0",
+    "tap-spec": "^2.1.2",
     "tape": "^3.0.3"
   },
   "jscsConfig": {
     "preset": "google",
-    "maximumLineLength": 98
+    "maximumLineLength": 98,
+    "requireBlocksOnNewline": true,
+    "validateLineBreaks": "LF"
   }
 }
