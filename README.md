@@ -43,8 +43,6 @@ var readGlob = require('read-glob');
 *callback*: `Function`  
 Return: `Object` (instance of [`glob.Glob`](https://github.com/isaacs/node-glob#class-globglob) class)
 
-It is similar to [fs.readFile]. The only deference is that it takes a glob pattern as its first argument.
-
 #### options
 
 The option object will be directly passed to [glob] and [fs.readFile], or the encoding string sets the encoding of [fs.readFile].
@@ -56,7 +54,9 @@ Unlike the original API, glob's `nodir` option is `true` by default.
 *error*: `Error` if it fails to read the file, otherwise `null`  
 *contents*: `Array` of [`Buffer`](http://nodejs.org/api/buffer.html#buffer_class_buffer) or `String` (according to `encoding` option)
 
-The second argument will be an array of file contents whose order depends on the globbing result. 
+The second argument will be an array of file contents whose order depends on the globbing result.
+
+Note that it automatically strips [UTF-8 byte order mark](http://en.wikipedia.org/wiki/Byte_order_mark#UTF-8) from results.
 
 ```javascript
 var readGlob = require('read-glob');
