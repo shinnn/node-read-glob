@@ -36,16 +36,16 @@
   ],
   "dependencies": {
     "assert-fs-readfile-option": "^1.0.0",
-    "glob": "^4.3.5",
+    "glob": "^5.0.3",
     "read-multiple-files": "^1.1.0",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^0.13.0",
-    "istanbul": "^0.3.5",
-    "istanbul-coveralls": "^1.0.1",
-    "jscs": "^1.10.0",
-    "tap-spec": "^2.2.0",
+    "eslint": "^0.16.2",
+    "istanbul": "^0.3.7",
+    "istanbul-coveralls": "^1.0.2",
+    "jscs": "^1.11.3",
+    "tap-spec": "^2.2.2",
     "tape": "^3.5.0"
   },
   "jscsConfig": {

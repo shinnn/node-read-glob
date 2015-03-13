@@ -18,19 +18,20 @@ test('readGlob()', function(t) {
 
   var options = {
     nounique: true,
+    ignore: '.gitignore',
     noglobstar: true,
     encoding: 'hex'
   };
 
   var optionsClone = xtend(options);
 
-  readGlob('{.gitattribute{s,s},**/test.js,node_*,../}', options, function(err, contents) {
+  readGlob('{.*it*e{,s,s},**/test.js,node_*,../}', options, function(err, contents) {
     var expected = new Buffer('* text=auto\n').toString('hex');
 
     t.deepEqual(
       [err, contents],
       [null, [expected, expected]],
-      'should reflect minimatch, node-glob and fs.readFile to the result.'
+      'should reflect minimatch, node-glob and fs.readFile options to the result.'
     );
     t.deepEqual(options, optionsClone, 'should not modify the original option object.');
   });
