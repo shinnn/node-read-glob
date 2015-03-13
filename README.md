@@ -1,11 +1,11 @@
 # read-glob
 
-[![NPM version](https://img.shields.io/npm/v/read-glob.svg?style=flat)](https://www.npmjs.com/package/read-glob)
-[![Build Status](https://img.shields.io/travis/shinnn/node-read-glob.svg?style=flat)](https://travis-ci.org/shinnn/node-read-glob)
+[![NPM version](https://img.shields.io/npm/v/read-glob.svg)](https://www.npmjs.com/package/read-glob)
+[![Build Status](https://img.shields.io/travis/shinnn/node-read-glob.svg)](https://travis-ci.org/shinnn/node-read-glob)
 [![Build status](https://ci.appveyor.com/api/projects/status/9cf2k7pkog7ax2fs?svg=true)](https://ci.appveyor.com/project/ShinnosukeWatanabe/node-read-glob)
-[![Coverage Status](https://img.shields.io/coveralls/shinnn/node-read-glob.svg?style=flat)](https://coveralls.io/r/shinnn/node-read-glob)
-[![Dependency Status](https://img.shields.io/david/shinnn/node-read-glob.svg?style=flat&label=deps)](https://david-dm.org/shinnn/node-read-glob)
-[![devDependency Status](https://img.shields.io/david/dev/shinnn/node-read-glob.svg?style=flat&label=devDeps)](https://david-dm.org/shinnn/node-read-glob#info=devDependencies)
+[![Coverage Status](https://img.shields.io/coveralls/shinnn/node-read-glob.svg)](https://coveralls.io/r/shinnn/node-read-glob)
+[![Dependency Status](https://img.shields.io/david/shinnn/node-read-glob.svg?label=deps)](https://david-dm.org/shinnn/node-read-glob)
+[![devDependency Status](https://img.shields.io/david/dev/shinnn/node-read-glob.svg?label=devDeps)](https://david-dm.org/shinnn/node-read-glob#info=devDependencies)
 
 Search files with glob pattern and read them asynchronously
 
@@ -51,7 +51,7 @@ Unlike the original API, glob's `nodir` option is `true` by default.
 #### callback(*error*, *contents*)
 
 *error*: `Error` if it fails to read the file, otherwise `null`  
-*contents*: `Array` of [`Buffer`](http://nodejs.org/api/buffer.html#buffer_class_buffer) or `String` (according to `encoding` option)
+*contents*: `Array` of [`Buffer`](https://nodejs.org/api/buffer.html#buffer_class_buffer) or `String` (according to `encoding` option)
 
 The second argument will be an array of file contents whose order depends on the globbing result.
 
@@ -87,9 +87,9 @@ readGlob('{foo,bar.baz}.txt', {nobrace: true}, function(err, contents) {
 
 ## License
 
-Copyright (c) [Shinnosuke Watanabe](https://github.com/shinnn)
+Copyright (c) 2014 - 2015 [Shinnosuke Watanabe](https://github.com/shinnn)
 
 Licensed under [the MIT License](./LICENSE).
 
-[fs.readFile]: http://nodejs.org/api/fs.html#fs_fs_readfile_filename_options_callback
+[fs.readFile]: https://nodejs.org/api/fs.html#fs_fs_readfile_filename_options_callback
 [glob]: https://github.com/isaacs/node-glob#options
