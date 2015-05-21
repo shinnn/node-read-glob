@@ -3,22 +3,14 @@
   "version": "2.1.0",
   "description": "Search files with glob pattern and read them asynchronously",
   "repository": "shinnn/node-read-glob",
-  "author": {
-    "name": "Shinnosuke Watanabe",
-    "url": "https://github.com/shinnn"
-  },
+  "author": "Shinnosuke Watanabe (https://github.com/shinnn)",
   "scripts": {
     "pretest": "eslint --config node_modules/@shinnn/eslintrc-node/rc.json index.js test.js",
     "test": "node test.js | tap-spec",
     "coverage": "istanbul cover test.js",
     "coveralls": "${npm_package_scripts_coverage} && istanbul-coveralls"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/shinnn/node-read-glob/blob/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "files": [
     "index.js"
   ],
@@ -36,14 +28,14 @@
   ],
   "dependencies": {
     "assert-fs-readfile-option": "^1.0.0",
-    "glob": "^5.0.5",
+    "glob": "^5.0.6",
     "read-multiple-files": "^1.1.0",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
     "@shinnn/eslintrc-node": "^1.0.2",
-    "eslint": "^0.20.0",
-    "istanbul": "^0.3.13",
+    "eslint": "^0.21.2",
+    "istanbul": "^0.3.14",
     "istanbul-coveralls": "^1.0.2",
     "tap-spec": "^3.0.0",
     "tape": "^4.0.0"
