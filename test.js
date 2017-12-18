@@ -6,13 +6,21 @@ var test = require('tape');
 var xtend = require('xtend');
 
 test('readGlob()', function(t) {
-  t.plan(13);
+  t.plan(14);
 
   readGlob('{.git{attributes,ignore},node_*/{glob,xtend}}', 'utf8', function(err, contents) {
     t.deepEqual(
       [err, contents],
       [null, ['* text=auto\n', 'coverage\nnode_modules\n']],
       'should reflect encoding to the result.'
+    );
+  });
+
+  readGlob('{.git{attributes,ignore},node_*/{glob,xtend}}', {encoding: 'utf8', asObject: true}, function(err, contents) {
+    t.deepEqual(
+      [err, contents],
+      [null, {'.gitattributes': '* text=auto\n', '.gitignore': 'coverage\nnode_modules\n'}],
+      'should reflect encoding to the asObject result.'
     );
   });
 

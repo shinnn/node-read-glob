@@ -38,7 +38,14 @@ module.exports = function readGlob(globPattern, options, cb) {
       return;
     }
 
-    readMultipleFiles(filePaths, options, cb);
+    var cb2 = options.asObject ? function(err, files) {
+        var o = {};
+        for (var i in filePaths) {
+          o[filePaths[i]] = files[i];
+        }
+        cb(null, o);
+      } : cb;
+    readMultipleFiles(filePaths, options, cb2);
   });
 
   return g;
