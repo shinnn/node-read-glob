@@ -1,11 +1,9 @@
 # read-glob
 
-[![NPM version](https://img.shields.io/npm/v/read-glob.svg)](https://www.npmjs.com/package/read-glob)
-[![Build Status](https://img.shields.io/travis/shinnn/node-read-glob.svg)](https://travis-ci.org/shinnn/node-read-glob)
-[![Build status](https://ci.appveyor.com/api/projects/status/9cf2k7pkog7ax2fs?svg=true)](https://ci.appveyor.com/project/ShinnosukeWatanabe/node-read-glob)
-[![Coverage Status](https://img.shields.io/coveralls/shinnn/node-read-glob.svg)](https://coveralls.io/r/shinnn/node-read-glob)
-[![Dependency Status](https://img.shields.io/david/shinnn/node-read-glob.svg?label=deps)](https://david-dm.org/shinnn/node-read-glob)
-[![devDependency Status](https://img.shields.io/david/dev/shinnn/node-read-glob.svg?label=devDeps)](https://david-dm.org/shinnn/node-read-glob#info=devDependencies)
+[![npm version](https://img.shields.io/npm/v/read-glob.svg)](https://www.npmjs.com/package/read-glob)
+[![Build Status](https://travis-ci.org/shinnn/node-read-glob.svg?branch=master)](https://travis-ci.org/shinnn/node-read-glob)
+[![Build status](https://ci.appveyor.com/api/projects/status/9cf2k7pkog7ax2fs/branch/master?svg=true)](https://ci.appveyor.com/project/ShinnosukeWatanabe/node-read-glob/branch/master)
+[![Coverage Status](https://img.shields.io/coveralls/shinnn/node-read-glob.svg)](https://coveralls.io/github/shinnn/node-read-glob)
 
 Search files with glob pattern and read them asynchronously
 
@@ -37,8 +35,8 @@ var readGlob = require('read-glob');
 
 ### readGlob(*pattern* [, *options*], *callback*)
 
-*pattern*: `String` (glob pattern)  
-*options*: `Object` (for [glob] and [fs.readFile]) or `String` (for [fs.readFile])  
+*pattern*: `string` (glob pattern)  
+*options*: `Object` ([glob] and [fs.readFile] options) or `string` (encoding)  
 *callback*: `Function`  
 Return: `Object` (instance of [`glob.Glob`](https://github.com/isaacs/node-glob#class-globglob) class)
 
@@ -83,13 +81,11 @@ readGlob('{foo,bar.baz}.txt', {nobrace: true}, function(err, contents) {
 
 ## Related project
 
-* [read-glob-promise](https://github.com/shinnn/read-glob-promise) ([Promises/A+](https://promisesaplus.com/) version)
+* [read-glob-promise](https://github.com/shinnn/read-glob-promise) ([Promise](https://promisesaplus.com/) version)
 
 ## License
 
-Copyright (c) 2014 - 2015 [Shinnosuke Watanabe](https://github.com/shinnn)
+[ISC License](./LICENSE) © 2017 Shinnosuke Watanabe
 
-Licensed under [the MIT License](./LICENSE).
-
-[fs.readFile]: https://nodejs.org/api/fs.html#fs_fs_readfile_filename_options_callback
+[fs.readFile]: https://nodejs.org/api/fs.html#fs_fs_readfile_path_options_callback
 [glob]: https://github.com/isaacs/node-glob#options

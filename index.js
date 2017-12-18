@@ -1,7 +1,3 @@
-/*!
- * read-glob | MIT (c) Shinnosuke Watanabe
- * https://github.com/shinnn/node-read-glob
-*/
 'use strict';
 
 var assertFsReadFileOption = require('assert-fs-readfile-option');

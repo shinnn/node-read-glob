@@ -10,7 +10,7 @@
     "coverage": "istanbul cover test.js",
     "coveralls": "${npm_package_scripts_coverage} && istanbul-coveralls"
   },
-  "license": "MIT",
+  "license": "ISC",
   "files": [
     "index.js"
   ],
