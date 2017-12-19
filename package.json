@@ -1,43 +1,48 @@
 {
-  "name": "read-glob",
-  "version": "2.1.0",
-  "description": "Search files with glob pattern and read them asynchronously",
-  "repository": "shinnn/node-read-glob",
-  "author": "Shinnosuke Watanabe (https://github.com/shinnn)",
-  "scripts": {
-    "pretest": "eslint --config node_modules/@shinnn/eslintrc-node/rc.json index.js test.js",
-    "test": "node test.js | tap-spec",
-    "coverage": "istanbul cover test.js",
-    "coveralls": "${npm_package_scripts_coverage} && istanbul-coveralls"
-  },
-  "license": "ISC",
-  "files": [
-    "index.js"
-  ],
-  "keywords": [
-    "file",
-    "files",
-    "fs",
-    "glob",
-    "pattern",
-    "match",
-    "read",
-    "async",
-    "asynchronous",
-    "asynchronously"
-  ],
-  "dependencies": {
-    "assert-fs-readfile-option": "^1.0.0",
-    "glob": "^5.0.6",
-    "read-multiple-files": "^1.1.0",
-    "xtend": "^4.0.0"
-  },
-  "devDependencies": {
-    "@shinnn/eslintrc-node": "^1.0.2",
-    "eslint": "^0.21.2",
-    "istanbul": "^0.3.14",
-    "istanbul-coveralls": "^1.0.2",
-    "tap-spec": "^3.0.0",
-    "tape": "^4.0.0"
-  }
+	"name": "read-glob",
+	"version": "2.1.0",
+	"description": "Search files with glob pattern and read them asynchronously",
+	"repository": "shinnn/node-read-glob",
+	"author": "Shinnosuke Watanabe (https://github.com/shinnn)",
+	"scripts": {
+		"pretest": "eslint --fix --format=codeframe index.js test.js",
+		"test": "nyc --reporter=text --reporter=html node test.js"
+	},
+	"license": "ISC",
+	"files": [
+		"index.js"
+	],
+	"keywords": [
+		"file",
+		"files",
+		"fs",
+		"glob",
+		"pattern",
+		"match",
+		"read",
+		"async",
+		"asynchronous",
+		"asynchronously"
+	],
+	"dependencies": {
+		"assert-fs-readfile-option": "^1.0.0",
+		"glob": "^7.1.2",
+		"object-assign": "^4.1.1",
+		"read-multiple-files": "^1.1.1"
+	},
+	"devDependencies": {
+		"@shinnn/eslint-config-node": "^5.0.0",
+		"eslint": "^4.13.1",
+		"nyc": "^11.4.1",
+		"tape": "^4.8.0",
+		"unglobbable": "^1.0.0"
+	},
+	"eslintConfig": {
+		"extends": "@shinnn/node",
+		"rules": {
+			"no-var": "off",
+			"prefer-arrow-callback": "off",
+			"prefer-template": "off"
+		}
+	}
 }
