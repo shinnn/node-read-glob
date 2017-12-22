@@ -5,7 +5,11 @@ var glob = require('glob');
 var objectAssign = require('object-assign');
 var readMultipleFiles = require('read-multiple-files');
 
-var defaultOption = {nodir: true};
+var defaultOption = {
+	nodir: true,
+	silent: true,
+	strict: true
+};
 
 module.exports = function readGlob(globPattern, options, cb) {
 	if (cb === undefined) {
@@ -16,10 +20,16 @@ module.exports = function readGlob(globPattern, options, cb) {
 		if (typeof options === 'string') {
 			options = {
 				encoding: options,
-				nodir: true
+				nodir: true,
+				silent: true,
+				strict: true
 			};
 		} else {
-			options = objectAssign({nodir: true}, options);
+			options = objectAssign({
+				nodir: true,
+				silent: true,
+				strict: true
+			}, options);
 		}
 	} else {
 		options = defaultOption;

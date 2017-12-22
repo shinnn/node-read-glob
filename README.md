@@ -44,7 +44,7 @@ Return: `Object` (instance of [`glob.Glob`](https://github.com/isaacs/node-glob#
 
 The option object will be directly passed to [glob] and [fs.readFile], or the encoding string sets the encoding of [fs.readFile].
 
-Unlike the original API, glob's `nodir` option is `true` by default.
+Unlike the original API, glob's `nodir`, `silent` and `strict` options are `true` by default.
 
 #### callback(*error*, *contents*)
 
