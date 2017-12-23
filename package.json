@@ -1,6 +1,6 @@
 {
 	"name": "read-glob",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"description": "Search files with glob pattern and read them asynchronously",
 	"repository": "shinnn/node-read-glob",
 	"author": "Shinnosuke Watanabe (https://github.com/shinnn)",
@@ -32,7 +32,7 @@
 	},
 	"devDependencies": {
 		"@shinnn/eslint-config-node": "^5.0.0",
-		"eslint": "^4.13.1",
+		"eslint": "^4.14.0",
 		"nyc": "^11.4.1",
 		"tape": "^4.8.0",
 		"unglobbable": "^1.0.0"
