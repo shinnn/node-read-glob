@@ -1,6 +1,7 @@
 'use strict';
 
 var assertFsReadFileOption = require('assert-fs-readfile-option');
+var assertValidGlobOpts = require('assert-valid-glob-opts');
 var glob = require('glob');
 var objectAssign = require('object-assign');
 var readMultipleFiles = require('read-multiple-files');
@@ -17,6 +18,7 @@ module.exports = function readGlob(globPattern, options, cb) {
 		options = defaultOption;
 	} else if (options) {
 		assertFsReadFileOption(options);
+
 		if (typeof options === 'string') {
 			options = {
 				encoding: options,
@@ -25,6 +27,8 @@ module.exports = function readGlob(globPattern, options, cb) {
 				strict: true
 			};
 		} else {
+			assertValidGlobOpts(options);
+
 			options = objectAssign({
 				nodir: true,
 				silent: true,

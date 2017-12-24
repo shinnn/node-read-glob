@@ -6,7 +6,7 @@ const test = require('tape');
 const unglobbable = require('unglobbable');
 
 test('readGlob()', t => {
-	t.plan(13);
+	t.plan(14);
 
 	readGlob('{.git{attributes,ignore},node_*/{glob,lodash}}', 'utf8', (err, contents) => {
 		t.deepEqual(
@@ -80,6 +80,12 @@ test('readGlob()', t => {
 		() => readGlob([''], true),
 		/TypeError.*Last argument/,
 		'should throw a type error when the last argument is not a function.'
+	);
+
+	t.throws(
+		() => readGlob('', {ignore: Math.ceil}, t.fail),
+		/Error.*node-glob expected `ignore` option to be an array or string, but got \[Function: ceil]\./,
+		'should throw a type error when the encoding is unknown.'
 	);
 
 	t.throws(
