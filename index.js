@@ -1,12 +1,11 @@
 'use strict';
 
-var assertFsReadFileOption = require('assert-fs-readfile-option');
-var assertValidGlobOpts = require('assert-valid-glob-opts');
-var glob = require('glob');
-var objectAssign = require('object-assign');
-var readMultipleFiles = require('read-multiple-files');
+const assertFsReadFileOption = require('assert-fs-readfile-option');
+const assertValidGlobOpts = require('assert-valid-glob-opts');
+const glob = require('glob');
+const readMultipleFiles = require('read-multiple-files');
 
-var defaultOption = {
+const defaultOption = {
 	nodir: true,
 	silent: true,
 	strict: true
@@ -29,7 +28,7 @@ module.exports = function readGlob(globPattern, options, cb) {
 		} else {
 			assertValidGlobOpts(options);
 
-			options = objectAssign({
+			options = Object.assign({
 				nodir: true,
 				silent: true,
 				strict: true
@@ -40,10 +39,10 @@ module.exports = function readGlob(globPattern, options, cb) {
 	}
 
 	if (typeof cb !== 'function') {
-		throw new TypeError(cb + ' is not a function. Last argument must be a function.');
+		throw new TypeError(`${cb} is not a function. Last argument must be a function.`);
 	}
 
-	var g = new glob.Glob(globPattern, options, function(err, filePaths) {
+	const g = new glob.Glob(globPattern, options, (err, filePaths) => {
 		if (err) {
 			g.abort();
 			cb(err);

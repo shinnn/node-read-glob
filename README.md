@@ -8,9 +8,9 @@
 Search files with glob pattern and read them asynchronously
 
 ```javascript
-var readGlob = require('read-glob');
+const readGlob = require('read-glob');
 
-readGlob('src/*.txt', function(err, bufs) {
+readGlob('src/*.txt', (err, bufs) => {
   if (err) {
     throw err;
   }
@@ -21,7 +21,7 @@ readGlob('src/*.txt', function(err, bufs) {
 
 ## Installation
 
-[Use npm](https://docs.npmjs.com/cli/install).
+[Use](https://docs.npmjs.com/cli/install) [npm](https://docs.npmjs.com/getting-started/what-is-npm).
 
 ```sh
 npm install read-glob
@@ -30,7 +30,7 @@ npm install read-glob
 ## API
 
 ```javascript
-var readGlob = require('read-glob');
+const readGlob = require('read-glob');
 ```
 
 ### readGlob(*pattern* [, *options*], *callback*)
@@ -49,20 +49,20 @@ Unlike the original API, glob's `nodir`, `silent` and `strict` options are `true
 #### callback(*error*, *contents*)
 
 *error*: `Error` if it fails to read the file, otherwise `null`  
-*contents*: `Array` of [`Buffer`](https://nodejs.org/api/buffer.html#buffer_class_buffer) or `String` (according to `encoding` option)
+*contents*: `Array<Buffer>` or `Array<string>` (according to `encoding` option)
 
 The second argument will be an array of file contents whose order depends on the globbing result.
 
 Note that it automatically strips [UTF-8 byte order mark](http://en.wikipedia.org/wiki/Byte_order_mark#UTF-8) from results.
 
 ```javascript
-var readGlob = require('read-glob');
+const readGlob = require('read-glob');
 
 // foo.txt: lorem
 // bar.txt: ipsum
 // baz.txt: dolor
 
-readGlob('{foo,ba*}.txt', 'utf8', function(err, contents) {
+readGlob('{foo,ba*}.txt', 'utf8', (err, contents) => {
   if (err) {
     throw err;
   }
@@ -70,7 +70,7 @@ readGlob('{foo,ba*}.txt', 'utf8', function(err, contents) {
   contents; //=> ['lorem', 'ipsum', 'dolor']
 });
 
-readGlob('{foo,bar.baz}.txt', {nobrace: true}, function(err, contents) {
+readGlob('{foo,bar.baz}.txt', {nobrace: true}, (err, contents) => {
   if (err) {
     throw err;
   }
