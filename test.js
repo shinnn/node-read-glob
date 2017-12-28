@@ -6,7 +6,7 @@ const test = require('tape');
 const unglobbable = require('unglobbable');
 
 test('readGlob()', t => {
-	t.plan(14);
+	t.plan(15);
 
 	readGlob('{.git{attributes,ignore},node_*/{glob,lodash}}', 'utf8', (err, contents) => {
 		t.deepEqual(
@@ -61,36 +61,42 @@ test('readGlob()', t => {
 	t.throws(
 		() => readGlob([''], t.fail),
 		/TypeError.*string required/,
-		'should throw a type error when the first argument is not a string.'
+		'should throw an error when the first argument is not a string.'
 	);
 
 	t.throws(
 		() => readGlob('*', 1, t.fail),
 		/TypeError.*argument/,
-		'should throw a type error when it takes invalid option value.'
+		'should throw an error when it takes invalid option value.'
 	);
 
 	t.throws(
 		() => readGlob('', 'utf7', t.fail),
 		/Error.*encoding/,
-		'should throw a type error when the encoding is unknown.'
+		'should throw an error when the encoding is unknown.'
 	);
 
 	t.throws(
 		() => readGlob([''], true),
 		/TypeError.*Last argument/,
-		'should throw a type error when the last argument is not a function.'
+		'should throw an error when the last argument is not a function.'
 	);
 
 	t.throws(
 		() => readGlob('', {ignore: Math.ceil}, t.fail),
 		/Error.*node-glob expected `ignore` option to be an array or string, but got \[Function: ceil]\./,
-		'should throw a type error when the encoding is unknown.'
+		'should throw an error when the encoding is unknown.'
 	);
 
 	t.throws(
 		() => readGlob(),
-		/TypeError.*Last argument/,
-		'should throw a type error when it takes no arguments.'
+		/RangeError.*Expected 2 or 3 arguments \(<string>\[, <Object>], <Function>\), but got no arguments./,
+		'should throw an error when it takes no arguments.'
+	);
+
+	t.throws(
+		() => readGlob(1, 2, 3, 4),
+		/RangeError.*Expected 2 or 3 arguments \(<string>\[, <Object>], <Function>\), but got 4 arguments\./,
+		'should throw an error when it takes too many arguments.'
 	);
 });
