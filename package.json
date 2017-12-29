@@ -1,6 +1,6 @@
 {
 	"name": "read-glob",
-	"version": "3.0.0-0",
+	"version": "3.0.0-1",
 	"description": "Search files with glob pattern and read them asynchronously",
 	"repository": "shinnn/node-read-glob",
 	"author": "Shinnosuke Watanabe (https://github.com/shinnn)",
@@ -26,10 +26,9 @@
 	],
 	"dependencies": {
 		"assert-fs-readfile-option": "^1.0.0",
-		"assert-valid-glob-opts": "^0.1.0",
+		"assert-valid-glob-opts": "^1.0.0",
 		"glob": "^7.1.2",
-		"object-assign": "^4.1.1",
-		"read-multiple-files": "^1.1.1"
+		"read-multiple-files": "2.0.0-4"
 	},
 	"devDependencies": {
 		"@shinnn/eslint-config-node": "^5.0.0",
