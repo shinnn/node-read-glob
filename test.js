@@ -1,102 +1,212 @@
 'use strict';
 
-const glob = require('glob');
+const {join} = require('path');
+const {promisify} = require('util');
+
+const isError = require('lodash/fp/isError');
+const after = require('lodash/fp/after');
 const readGlob = require('.');
+const rmfr = require('rmfr');
+const {symlink} = require('graceful-fs');
 const test = require('tape');
 const unglobbable = require('unglobbable');
 
-test('readGlob()', t => {
-	t.plan(15);
+test('readGlob()', async t => {
+	t.plan(20);
 
-	readGlob('{.git{attributes,ignore},node_*/{glob,lodash}}', 'utf8', (err, contents) => {
-		t.deepEqual(
-			[err, contents],
-			[null, ['* text=auto\n', '.nyc_output\ncoverage\nnode_modules\n']],
-			'should reflect encoding to the result.'
-		);
+	await rmfr(join(__dirname, '.tmp'));
+	await promisify(symlink)('this_file_does_not_exist', join(__dirname, '.tmp'));
+
+	readGlob('.git{attributes,ignore}').subscribe({
+		next({cwd, path, contents}) {
+			if (path === '.gitattributes') {
+				t.equal(
+					cwd,
+					__dirname,
+					'should include CWD to the results.'
+				);
+			} else if (path === '.gitignore') {
+				t.ok(
+					contents.equals(Buffer.from('.nyc_output\n.tmp\ncoverage\nnode_modules\n')),
+					'should include file contents to the results.'
+				);
+			}
+		},
+		error: t.fail,
+		complete() {
+			t.pass('should complete when it reads all files.');
+		}
 	});
 
-	const options = {
-		nounique: true,
-		ignore: '.gitignore',
+	readGlob('../{.gita*,**/test.js,node_modules}', {
+		cwd: join(__dirname, 'node_modules'),
+		encoding: 'hex',
 		noglobstar: true,
-		encoding: 'hex'
-	};
+		stat: true
+	}).subscribe({
+		next({cwd, path, stat, contents}) {
+			t.equal(
+				path,
+				'../.gitattributes',
+				'should support node-glob options.'
+			);
 
-	const optionsClone = Object.assign({}, options);
+			t.equal(
+				cwd,
+				join(__dirname, 'node_modules'),
+				'should reflect node-glob options to the results.'
+			);
 
-	readGlob('{.*it*e{,s,s},**/test.js,node_*,../}', options, (err, contents) => {
-		const expected = Buffer.from('* text=auto\n').toString('hex');
+			t.ok(
+				stat.isFile(),
+				'should add file stats to the results when `stat` option is enabled.'
+			);
 
-		t.deepEqual(
-			[err, contents],
-			[null, [expected, expected]],
-			'should reflect minimatch, node-glob and fs.readFile options to the result.'
+			t.equal(
+				contents,
+				Buffer.from('* text=auto\n').toString('hex'),
+				'should support fs.readFile options.'
+			);
+		},
+		error: t.fail
+	});
+
+	readGlob('.gitattributes', 'base64').subscribe({
+		next({contents}) {
+			t.equal(
+				contents,
+				Buffer.from('* text=auto\n').toString('base64'),
+				'should accept encoding string as its second argument.'
+			);
+		},
+		error: t.fail
+	});
+
+	const values = [];
+
+	readGlob(__dirname, null).forEach(val => values.push(val)).then(() => {
+		t.equal(
+			values.length,
+			0,
+			'should send no values when it cannot find any files.'
 		);
-		t.deepEqual(options, optionsClone, 'should not modify the original option object.');
 	});
 
-	readGlob('__foo__bar__baz__qux__', null, (err, bufs) => {
-		t.deepEqual(
-			[err, bufs],
-			[null, []],
-			'should pass an empty array to the callback when it reads no files.'
-		);
+	const complete = t.fail.bind(t, 'Unexpectedly completed.');
+
+	readGlob('.tmp').subscribe({
+		error({code}) {
+			t.equal(code, 'ENOENT', 'should resolve symlinks.');
+		},
+		complete
 	});
 
-	readGlob('node_modules', {nodir: false}, err => {
-		t.equal(err.code, 'EISDIR', 'should fail when it cannot read the target.');
+	const subscription = readGlob('**/*', {
+		realpath: true
+	}).subscribe({
+		next: after(() => {
+			subscription.unsubscribe();
+			t.equal(subscription.closed, true, 'should be cancelable.');
+		})(2),
+		error: t.fail,
+		complete
 	});
 
-	const g = readGlob(unglobbable, err => {
-		t.ok(g.aborted, 'should abort glob before it calls callback function.');
-		t.ok(
-			err.code,
-			`should fail when it tries to access unaccessible paths, such as ${err.path}`
-		);
+	readGlob(unglobbable).subscribe({
+		error(err) {
+			t.ok(
+				isError(err),
+				'should fail when it tries to access inaccessible paths.'
+			);
+		},
+		complete
 	});
 
-	t.equal(g.constructor, glob.Glob, 'should return glob instance.');
+	readGlob([-1]).subscribe({
+		error(err) {
+			t.equal(
+				err.toString(),
+				'TypeError: Expected a glob pattern (<string>), but got a non-string value [ -1 ] (array).',
+				'should fail when the first argument is not a string.'
+			);
+		},
+		complete
+	});
 
-	t.throws(
-		() => readGlob([''], t.fail),
-		/TypeError.*string required/,
-		'should throw an error when the first argument is not a string.'
-	);
+	readGlob('*', 1).subscribe({
+		error(err) {
+			t.equal(
+				err.toString(),
+				'TypeError: Expected node-glob options to be an object, but got 1 (number).',
+				'should fail when it takes invalid option value.'
+			);
+		},
+		complete
+	});
 
-	t.throws(
-		() => readGlob('*', 1, t.fail),
-		/TypeError.*argument/,
-		'should throw an error when it takes invalid option value.'
-	);
+	readGlob('_', 'utf7').subscribe({
+		error({code}) {
+			t.equal(
+				code,
+				'ERR_INVALID_OPT_VALUE_ENCODING',
+				'should fail when the encoding is unknown.'
+			);
+		},
+		complete
+	});
 
-	t.throws(
-		() => readGlob('', 'utf7', t.fail),
-		/Error.*encoding/,
-		'should throw an error when the encoding is unknown.'
-	);
+	readGlob('_', {ignore: Math.ceil}).subscribe({
+		error(err) {
+			t.equal(
+				err.toString(),
+				'TypeError: node-glob expected `ignore` option to be an array or string, but got [Function: ceil].',
+				'should fail when it takes invalid node-glob options.'
+			);
+		},
+		complete
+	});
 
-	t.throws(
-		() => readGlob([''], true),
-		/TypeError.*Last argument/,
-		'should throw an error when the last argument is not a function.'
-	);
+	readGlob('_', {nodir: true}).subscribe({
+		error(err) {
+			t.equal(
+				err.toString(),
+				'TypeError: read-glob doesn\'t support `nodir` option as it ignores directory entries by default, but a value true (boolean) was provided for it.',
+				'should fail when `nodir` option is enabled.'
+			);
+		},
+		complete
+	});
 
-	t.throws(
-		() => readGlob('', {ignore: Math.ceil}, t.fail),
-		/Error.*node-glob expected `ignore` option to be an array or string, but got \[Function: ceil]\./,
-		'should throw an error when the encoding is unknown.'
-	);
+	readGlob('_', {mark: true}).subscribe({
+		error(err) {
+			t.equal(
+				err.toString(),
+				'TypeError: read-glob doesn\'t support `mark` option as it only emits file data and there is no need to differentiate file paths and directory paths explicitly, but a value true (boolean) was provided for it.',
+				'should fail when `mark` option is enabled.'
+			);
+		},
+		complete
+	});
 
-	t.throws(
-		() => readGlob(),
-		/RangeError.*Expected 2 or 3 arguments \(<string>\[, <Object>], <Function>\), but got no arguments./,
-		'should throw an error when it takes no arguments.'
-	);
+	readGlob().subscribe({
+		error(err) {
+			t.equal(
+				err.toString(),
+				'RangeError: Expected 1 or 2 arguments (<string>[, <Object|string>]), but got no arguments.',
+				'should throw an error when it takes no arguments.'
+			);
+		},
+		complete
+	});
 
-	t.throws(
-		() => readGlob(1, 2, 3, 4),
-		/RangeError.*Expected 2 or 3 arguments \(<string>\[, <Object>], <Function>\), but got 4 arguments\./,
-		'should throw an error when it takes too many arguments.'
-	);
+	readGlob('_', '_', '_').subscribe({
+		error(err) {
+			t.equal(
+				err.toString(),
+				'RangeError: Expected 1 or 2 arguments (<string>[, <Object|string>]), but got 3 arguments.',
+				'should throw an error when it takes too many arguments.'
+			);
+		},
+		complete
+	});
 });

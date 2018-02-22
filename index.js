@@ -1,74 +1,117 @@
 'use strict';
 
-const assertFsReadFileOption = require('assert-fs-readfile-option');
-const assertValidGlobOpts = require('assert-valid-glob-opts');
-const {Glob} = require('glob');
-const readMultipleFiles = require('read-multiple-files');
+const {resolve} = require('path');
 
-const ARG_LENGTH_ERROR = 'Expected 2 or 3 arguments (<string>[, <Object>], <Function>)';
-const defaultOption = {
-	nodir: true,
-	silent: true,
-	strict: true
-};
+const assertFsReadFileOption = require('assert-fs-readfile-option');
+const globObservable = require('glob-observable');
+const inspectWithKind = require('inspect-with-kind');
+const Observable = require('zen-observable');
+const {readFile} = require('graceful-fs');
+
+const ARG_LENGTH_ERROR = 'Expected 1 or 2 arguments (<string>[, <Object|string>])';
+const READFILE_OPTIONS = new Set(['encoding', 'flag']);
 
 module.exports = function readGlob(...args) {
-	const argLen = args.length;
+	return new Observable(observer => {
+		const argLen = args.length;
 
-	if (argLen === 0) {
-		const error = new RangeError(`${ARG_LENGTH_ERROR}, but got no arguments.`);
-		error.code = 'ERR_MISSING_ARGS';
+		if (argLen === 0) {
+			const error = new RangeError(`${ARG_LENGTH_ERROR}, but got no arguments.`);
+			error.code = 'ERR_MISSING_ARGS';
 
-		throw error;
-	}
-
-	if (argLen !== 2 && argLen !== 3) {
-		throw new RangeError(`${ARG_LENGTH_ERROR}, but got ${argLen} arguments.`);
-	}
-
-	const [globPattern] = args;
-	let options = args[1];
-	let cb = args[2];
-
-	if (argLen === 2) {
-		cb = options;
-		options = defaultOption;
-	} else if (options) {
-		assertFsReadFileOption(options);
-
-		if (typeof options === 'string') {
-			options = {
-				encoding: options,
-				nodir: true,
-				silent: true,
-				strict: true
-			};
-		} else {
-			assertValidGlobOpts(options);
-
-			options = Object.assign({
-				nodir: true,
-				silent: true,
-				strict: true
-			}, options);
-		}
-	} else {
-		options = defaultOption;
-	}
-
-	if (typeof cb !== 'function') {
-		throw new TypeError(`${cb} is not a function. Last argument must be a function.`);
-	}
-
-	const g = new Glob(globPattern, options, (err, filePaths) => {
-		if (err) {
-			g.abort();
-			cb(err);
-			return;
+			throw error;
 		}
 
-		readMultipleFiles(filePaths, options, cb);
+		if (argLen !== 1 && argLen !== 2) {
+			throw new RangeError(`${ARG_LENGTH_ERROR}, but got ${argLen} arguments.`);
+		}
+
+		const [globPattern] = args;
+		const readFileOptions = {};
+		let options = args[1];
+
+		if (argLen !== 1) {
+			if (typeof options === 'string') {
+				readFileOptions.encoding = options;
+				options = {};
+			} else if (options !== null && typeof options === 'object') {
+				if (options.nodir) {
+					throw new TypeError(`read-glob doesn't support \`nodir\` option as it ignores directory entries by default, but a value ${
+						inspectWithKind(options.nodir)
+					} was provided for it.`);
+				}
+
+				if (options.mark) {
+					throw new TypeError(`read-glob doesn't support \`mark\` option as it only emits file data and there is no need to differentiate file paths and directory paths explicitly, but a value ${
+						inspectWithKind(options.mark)
+					} was provided for it.`);
+				}
+
+				for (const readFileOption of READFILE_OPTIONS) {
+					if (options[readFileOption] !== undefined) {
+						readFileOptions.encoding = options.encoding;
+					}
+				}
+			}
+		}
+
+		let rest = 0;
+
+		function completeIfNeeded() {
+			rest--;
+
+			if (!subscription.closed) { // eslint-disable-line no-use-before-define
+				return;
+			}
+
+			if (rest !== 0) {
+				return;
+			}
+
+			observer.complete();
+		}
+
+		const subscription = globObservable(globPattern, options).subscribe({
+			next(value) {
+				rest++;
+
+				if (value.stat && value.stat.isDirectory()) {
+					completeIfNeeded();
+					return;
+				}
+
+				readFile(resolve(value.cwd, value.path), readFileOptions, (err, contents) => {
+					if (err) {
+						if (err.code !== 'EISDIR') {
+							observer.error(err);
+							return;
+						}
+					} else {
+						value.contents = contents;
+						observer.next(value);
+					}
+
+					completeIfNeeded();
+				});
+			},
+			error(err) {
+				observer.error(err);
+			},
+			complete() {
+				if (rest !== 0) {
+					return;
+				}
+
+				observer.complete();
+			}
+		});
+
+		if (!subscription.closed) {
+			assertFsReadFileOption(readFileOptions);
+		}
+
+		return function abortReadGlob() {
+			subscription.unsubscribe();
+		};
 	});
-
-	return g;
 };
