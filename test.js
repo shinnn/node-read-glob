@@ -84,7 +84,7 @@ test('readGlob()', async t => {
 
 	const values = [];
 
-	readGlob(__dirname, null).forEach(val => values.push(val)).then(() => {
+	readGlob('this_file_does_not_exist', null).forEach(val => values.push(val)).then(() => {
 		t.equal(
 			values.length,
 			0,

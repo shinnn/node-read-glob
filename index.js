@@ -55,6 +55,8 @@ module.exports = function readGlob(...args) {
 			}
 		}
 
+		assertFsReadFileOption(readFileOptions);
+
 		let rest = 0;
 
 		function completeIfNeeded() {
@@ -105,10 +107,6 @@ module.exports = function readGlob(...args) {
 				observer.complete();
 			}
 		});
-
-		if (!subscription.closed) {
-			assertFsReadFileOption(readFileOptions);
-		}
 
 		return function abortReadGlob() {
 			subscription.unsubscribe();

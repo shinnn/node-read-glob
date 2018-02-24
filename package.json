@@ -27,7 +27,7 @@
 	],
 	"dependencies": {
 		"assert-fs-readfile-option": "^1.0.0",
-		"glob-observable": "^0.6.1",
+		"glob-observable": "^0.7.0",
 		"graceful-fs": "^4.1.11",
 		"inspect-with-kind": "^1.0.4",
 		"zen-observable": "^0.8.6"
