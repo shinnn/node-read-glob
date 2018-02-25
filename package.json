@@ -1,6 +1,6 @@
 {
 	"name": "read-glob",
-	"version": "3.0.0-1",
+	"version": "3.0.0",
 	"description": "Search files with glob pattern and read them, Observable way",
 	"repository": "shinnn/node-read-glob",
 	"author": "Shinnosuke Watanabe (https://github.com/shinnn)",
